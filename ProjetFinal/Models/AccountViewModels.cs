@@ -3,18 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjetFinal.Models
 {
-    public class ExternalLoginConfirmationViewModel
-    {
-        [Required]
-        [Display(Name = "Courrier électronique")]
-        public string Email { get; set; }
-    }
-
-    public class ExternalLoginListViewModel
-    {
-        public string ReturnUrl { get; set; }
-    }
-
     public class SendCodeViewModel
     {
         public string SelectedProvider { get; set; }
@@ -49,7 +37,7 @@ namespace ProjetFinal.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Courrier électronique")]
+        [Display(Name = "Courriel")]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -66,11 +54,19 @@ namespace ProjetFinal.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Courrier électronique")]
+        [Display(Name = "Courriel")]
         public string Email { get; set; }
 
+        [Display(Name = "Prénom")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Nom")]
+        public string LastName { get; set; }
+        [Phone]
+        [Display(Name = "Numéro de téléphone")]
+        public string PhoneNumber { get; set; }
         [Required]
-        [StringLength(100, ErrorMessage = "La chaîne {0} doit comporter au moins {2} caractères.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La chaîne {0} doit être d'une longueur minimum de {2}.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Mot de passe")]
         public string Password { get; set; }
