@@ -6,6 +6,8 @@ namespace ProjetFinal.Models
     public class BookModel
     {
         [Required]
+        public int Id { get; set; }
+        [Required]
         [Display(Name = "Titre")]
         public string Title { get; set; }
         [Required]

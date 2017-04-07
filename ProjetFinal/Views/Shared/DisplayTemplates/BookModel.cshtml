@@ -2,13 +2,13 @@
 
 <div class="col-md-4">
     <div class="thumbnail ">
-        <a href='@Url.Action("BookDetails", "Home", Model)'>
+        <a href='@Url.Action("BookDetails", "Home", new { id = Model.Id })'>
             <img src="@Model.CoverUrl" />
         </a>
         <div class="caption">
             <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
             <h4>
-                @Html.ActionLink(Model.Title, "BookDetails", "Home", Model, new { @class = "item-title" })
+                @Html.ActionLink(Model.Title, "BookDetails", "Home", new { id = Model.Id }, new { @class = "item-title" })
             </h4>
             <p>@Model.Author</p>
             <p class="item-description">@Model.Description</p>
