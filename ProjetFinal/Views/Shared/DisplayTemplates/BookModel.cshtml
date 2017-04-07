@@ -2,7 +2,9 @@
 
 <div class="col-md-4">
     <div class="thumbnail ">
-        <img src="@Model.CoverUrl" />
+        <a href='@Url.Action("BookDetails", "Home", Model)'>
+            <img src="@Model.CoverUrl" />
+        </a>
         <div class="caption">
             <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
             <h4>

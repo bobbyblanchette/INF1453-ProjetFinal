@@ -11,6 +11,14 @@
     margin-bottom: 20px;
 }
 
+.thumbnail a, .thumbnail a img {
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
 .item-description {
     overflow: hidden;
     text-overflow: ellipsis;

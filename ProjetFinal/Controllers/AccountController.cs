@@ -70,7 +70,7 @@ namespace ProjetFinal.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView("~/Views/Account/Partials/Login.cshtml", model);
             }
 
             // Ceci ne comptabilise pas les échecs de connexion pour le verrouillage du compte
@@ -87,9 +87,37 @@ namespace ProjetFinal.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Tentative de connexion non valide.");
-                    return View(model);
+                    return PartialView("~/Views/Account/Partials/Login.cshtml", model);
             }
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> LoginJson(string username, string password, bool rememberme)
+        {
+            var result = await SignInManager.PasswordSignInAsync
+                         (username, password, rememberme, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return Json(true);
+                case SignInStatus.LockedOut:
+                case SignInStatus.RequiresVerification:
+                case SignInStatus.Failure:
+                    return Json(false);
+                default:
+                    break;
+            }
+            return Json(false);
+        }
+
+
+
+
+
+
+
 
         //
         // GET: /Account/VerifyCode
@@ -139,7 +167,7 @@ namespace ProjetFinal.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            return PartialView("~/Views/Account/Partials/Register.cshtml");
         }
 
         //
@@ -169,7 +197,7 @@ namespace ProjetFinal.Controllers
             }
 
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
-            return View(model);
+            return PartialView("~/Views/Account/Partials/Register.cshtml", model);
         }
 
         //
