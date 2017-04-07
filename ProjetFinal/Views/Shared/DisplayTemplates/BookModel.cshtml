@@ -1,0 +1,24 @@
+﻿@model ProjetFinal.Models.BookModel
+
+<div class="col-md-4">
+    <div class="thumbnail ">
+        <img src="@Model.CoverUrl" />
+        <div class="caption">
+            <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
+            <h4>
+                <a class="item-title" href="#">@Model.Title</a>
+            </h4>
+            <p>@Model.Author</p>
+            <p class="item-description">@Model.Description</p>
+        </div>
+        <div class="review-stars">
+            <p>
+                <span class="glyphicon glyphicon-star"></span>
+                <span class="glyphicon glyphicon-star"></span>
+                <span class="glyphicon glyphicon-star"></span>
+                <span class="glyphicon glyphicon-star"></span>
+                <span class="glyphicon glyphicon-star-empty"></span>
+            </p>
+        </div>
+    </div>
+</div>

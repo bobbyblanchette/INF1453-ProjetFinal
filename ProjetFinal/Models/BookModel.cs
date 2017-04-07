@@ -17,7 +17,8 @@ namespace ProjetFinal.Models
         [Required]
         public string CoverUrl { get; set; }
         [Required]
-        public decimal Prix { get; set; }
+        [UIHint("Currency")]
+        public decimal Price { get; set; }
         public int NbPages { get; set; }
         public string ISBN { get; set; }
         public int Year { get; set; }
