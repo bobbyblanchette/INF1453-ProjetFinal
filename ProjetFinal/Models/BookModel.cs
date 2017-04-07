@@ -24,5 +24,7 @@ namespace ProjetFinal.Models
         public int NbPages { get; set; }
         public string ISBN { get; set; }
         public int Year { get; set; }
+        [UIHint("Rating")]
+        public int Rating { get; set; }
     }
 }

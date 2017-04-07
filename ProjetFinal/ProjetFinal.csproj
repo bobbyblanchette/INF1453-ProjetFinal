@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Forloop.HtmlHelpers, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Forloop.HtmlHelpers.1.2.0.0\lib\net45\Forloop.HtmlHelpers.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -219,6 +222,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="Scripts\app\RegisterModal.js" />
+    <Content Include="Scripts\app\LoginModal.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -263,11 +268,17 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\Partials\Login.cshtml" />
-    <Content Include="Views\Account\Partials\Register.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\BookModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Currency.cshtml" />
     <Content Include="Views\Home\BookDetails.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Rating.cshtml" />
+    <Content Include="Views\Shared\_LayoutModal.cshtml" />
+    <Content Include="Views\Shared\_LoginPartialForm.cshtml" />
+    <Content Include="Views\Shared\LoginModal.cshtml" />
+    <Content Include="Views\Shared\_RegisterPartialForm.cshtml" />
+    <Content Include="Views\Shared\RegisterModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

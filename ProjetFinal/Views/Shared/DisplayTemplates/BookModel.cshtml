@@ -13,14 +13,6 @@
             <p>@Model.Author</p>
             <p class="item-description">@Model.Description</p>
         </div>
-        <div class="review-stars">
-            <p>
-                <span class="glyphicon glyphicon-star"></span>
-                <span class="glyphicon glyphicon-star"></span>
-                <span class="glyphicon glyphicon-star"></span>
-                <span class="glyphicon glyphicon-star"></span>
-                <span class="glyphicon glyphicon-star-empty"></span>
-            </p>
-        </div>
+        @Html.DisplayFor(m => m.Rating)
     </div>
 </div>

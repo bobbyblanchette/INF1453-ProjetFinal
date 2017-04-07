@@ -56,7 +56,8 @@ namespace ProjetFinal.Controllers
                     Price = decimal.Parse(row["Price"].ToString()),
                     NbPages = int.Parse(row["NbPages"].ToString()),
                     ISBN = row["ISBN"].ToString(),
-                    Year = int.Parse(row["Year"].ToString())
+                    Year = int.Parse(row["Year"].ToString()),
+                    Rating = int.Parse(row["Rating"].ToString())
                 });
             }
             foreach (DataRow row in categoriesTable.Rows)

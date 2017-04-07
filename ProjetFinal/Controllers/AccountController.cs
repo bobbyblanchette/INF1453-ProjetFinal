@@ -70,7 +70,7 @@ namespace ProjetFinal.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return PartialView("~/Views/Account/Partials/Login.cshtml", model);
+                return View(model);
             }
 
             // Ceci ne comptabilise pas les échecs de connexion pour le verrouillage du compte
@@ -87,10 +87,13 @@ namespace ProjetFinal.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Tentative de connexion non valide.");
-                    return PartialView("~/Views/Account/Partials/Login.cshtml", model);
+                    return View(model);
             }
         }
 
+
+
+        //this is some serious bullshit
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -111,9 +114,6 @@ namespace ProjetFinal.Controllers
             }
             return Json(false);
         }
-
-
-
 
 
 
@@ -167,7 +167,7 @@ namespace ProjetFinal.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return PartialView("~/Views/Account/Partials/Register.cshtml");
+            return View();
         }
 
         //
@@ -197,7 +197,7 @@ namespace ProjetFinal.Controllers
             }
 
             // Si nous sommes arrivés là, un échec s’est produit. Réafficher le formulaire
-            return PartialView("~/Views/Account/Partials/Register.cshtml", model);
+            return View(model);
         }
 
         //
