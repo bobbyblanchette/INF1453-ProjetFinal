@@ -15,6 +15,8 @@ namespace ProjetFinal.Models
         [Display(Name = "Description")]
         public string Description { get; set; }
         [Required]
+        public string Category { get; set; }
+        [Required]
         public string CoverUrl { get; set; }
         [Required]
         [UIHint("Currency")]

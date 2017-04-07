@@ -1,7 +1,7 @@
 ﻿@model ProjetFinal.Models.HomeModel
 
 @{
-    ViewBag.Title = "Livres";
+    ViewBag.Title = "Atlas - Le meilleur magasin de livre électronique au monde";
 }
 
 <div class="row">
@@ -10,11 +10,10 @@
             @ViewBag.Title
         </p>
         <div class="list-group">
-            <a href="#" class="list-group-item">PC</a>
-            <a href="#" class="list-group-item">PS4</a>
-            <a href="#" class="list-group-item">Xbox One</a>
-            <a href="#" class="list-group-item">Wii U</a>
-            <a href="#" class="list-group-item">Others</a>
+            @foreach (string category in Model.Categories)
+            {
+                @Html.ActionLink(category, "Index", "Home", new { searchString = "", category = category }, new { @class = "list-group-item" })
+            }
         </div>
     </div>
     <div class="col-md-9">

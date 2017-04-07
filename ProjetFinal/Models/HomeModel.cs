@@ -10,8 +10,11 @@ namespace ProjetFinal.Models
         public HomeModel()
         {
             this.Books = new List<BookModel>();
+            this.Categories = new List<string>();
         }
         public List<BookModel> Books { get; set; }
+
+        public List<string> Categories { get; set; }
 
         public List<List<BookModel>> GetBookChunks(int chunkSize)
         {

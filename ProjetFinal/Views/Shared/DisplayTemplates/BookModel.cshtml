@@ -6,7 +6,7 @@
         <div class="caption">
             <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
             <h4>
-                <a class="item-title" href="#">@Model.Title</a>
+                @Html.ActionLink(Model.Title, "BookDetails", "Home", Model, new { @class = "item-title" })
             </h4>
             <p>@Model.Author</p>
             <p class="item-description">@Model.Description</p>

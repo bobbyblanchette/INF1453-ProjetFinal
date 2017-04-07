@@ -1,0 +1,27 @@
+﻿@model ProjetFinal.Models.BookModel
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div class="row">
+    <div class="col-sm-4">
+        <img src="@Model.CoverUrl" />
+    </div>
+    <div class="col-sm-6">
+        <h1>
+            @Model.Title
+        </h1>
+        <h4>
+            @Model.Author
+        </h4>
+        @Html.DisplayFor(m => m.Price)
+        <p>Nb. Pages: @Model.NbPages</p>
+        <p>Année: @Model.Year</p>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary">PayPal</button>
+    </div>
+</div>
+<hr />
+<p>@Model.Description</p>

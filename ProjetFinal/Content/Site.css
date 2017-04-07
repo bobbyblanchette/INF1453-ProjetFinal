@@ -1,4 +1,13 @@
-﻿.thumbnail {
+﻿.logo {
+    height:25px;
+    margin-right:20px;
+}
+
+.navbar-form .form-group {
+    display: inline;
+}
+
+.thumbnail {
     margin-bottom: 20px;
 }
 

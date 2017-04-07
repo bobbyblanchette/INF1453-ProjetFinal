@@ -25,7 +25,7 @@ namespace ProjetFinal
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
+                LoginPath = new PathString("/Account/Partials/Login"),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Permet à l'application de valider le timbre de sécurité quand l'utilisateur se connecte.
