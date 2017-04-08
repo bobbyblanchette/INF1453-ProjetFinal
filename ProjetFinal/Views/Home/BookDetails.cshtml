@@ -5,7 +5,7 @@
 }
 
 @Html.HiddenFor(m => m.Price, new { id="_price" })
-@Html.Hidden("ConfirmPurchase", Url.Action("ConfirmPurchase", "Home", new { id = Model.Id }), new { id = "confirmPurchaseLink" })
+@Html.Hidden("ConfirmPurchase", Url.Action("ConfirmPurchase", "User", new { id = Model.Id }), new { id = "confirmPurchaseLink" })
 
 <div class="row">
     <div class="col-sm-4">

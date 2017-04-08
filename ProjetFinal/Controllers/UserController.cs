@@ -77,6 +77,11 @@ namespace ProjetFinal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public ActionResult ConfirmPurchase(int id)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         private static string SaltAndHash(string password)
         {
             string salt = CreateSalt(32);
