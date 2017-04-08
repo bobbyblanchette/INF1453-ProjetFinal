@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.OleDb;
@@ -79,6 +80,21 @@ namespace ProjetFinal.Controllers
 
         public ActionResult ConfirmPurchase(int id)
         {
+            string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
+            using (var conn = new OleDbConnection(connString))
+            {
+                string query = "insert into [Sales] ([UserId], [BookId]) select [Id], @bookId from [Users] where [Username] = @username";
+                OleDbCommand cmd = new OleDbCommand(query, conn);
+                cmd.Parameters.Add(new OleDbParameter("@bookId", id));
+                cmd.Parameters.Add(new OleDbParameter("@username", User.Identity.GetUserName()));
+
+                conn.Open();
+
+                cmd.ExecuteNonQuery();
+
+                cmd.Dispose();
+                conn.Close();
+            }
             return RedirectToAction("Index", "Home");
         }
 

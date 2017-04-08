@@ -23,7 +23,7 @@ namespace ProjetFinal.Controllers
                     query += " where [Title] like @searchString";
                 else if (!string.IsNullOrWhiteSpace(category))
                     query += " where [Category] = @category";
-
+                query += "order by [Rating] desc, [Title] asc";
 
                 OleDbCommand searchCmd = new OleDbCommand(query, conn);
 
