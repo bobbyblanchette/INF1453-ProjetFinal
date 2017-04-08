@@ -43,13 +43,13 @@ namespace ProjetFinal.Controllers
                 string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
                 using (var conn = new OleDbConnection(connString))
                 {
-                    string query = "insert into Users (Username, Password, FirstName, LastName, PhoneNumber, Admin) values (@username, @password, @firstName, @lastName, @phoneNumber, @admin)";
+                    string query = "insert into Users (Username, [Password], FirstName, LastName, PhoneNumber, Admin) values (@username, @password, @firstName, @lastName, @phoneNumber, @admin)";
                     OleDbCommand cmd = new OleDbCommand(query, conn);
                     cmd.Parameters.Add(new OleDbParameter("@username", user.Username));
                     cmd.Parameters.Add(new OleDbParameter("@password", SHA1Encode(user.Password)));
-                    cmd.Parameters.Add(new OleDbParameter("@firstName", user.FirstName));
-                    cmd.Parameters.Add(new OleDbParameter("@lastName", user.LastName));
-                    cmd.Parameters.Add(new OleDbParameter("@phoneNumber", user.PhoneNumber));
+                    cmd.Parameters.Add(new OleDbParameter("@firstName", user.FirstName ?? ""));
+                    cmd.Parameters.Add(new OleDbParameter("@lastName", user.LastName ?? ""));
+                    cmd.Parameters.Add(new OleDbParameter("@phoneNumber", user.PhoneNumber ?? ""));
                     cmd.Parameters.Add(new OleDbParameter("@admin", false));
 
                     conn.Open();
