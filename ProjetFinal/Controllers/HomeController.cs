@@ -50,7 +50,7 @@ namespace ProjetFinal.Controllers
                 conn.Close();
 
                 
-                model.Books = Deserialize(searchResultsTable);
+                model.Books = Utils.deserialize(searchResultsTable);
                 foreach (DataRow row in categoriesTable.Rows)
                 {
                     model.Categories.Add(row["Category"].ToString());
@@ -80,33 +80,12 @@ namespace ProjetFinal.Controllers
                 conn.Close();
 
 
-                model = Deserialize(dataTable).FirstOrDefault();
+                model = Utils.deserialize(dataTable).FirstOrDefault();
 
             }
                 return View(model);
         }
 
-        public List<Models.BookModel> Deserialize(DataTable dt)
-        {
-            List<Models.BookModel> books = new List<Models.BookModel>();
-            foreach (DataRow row in dt.Rows)
-            {
-                books.Add(new Models.BookModel()
-                {
-                    Id = int.Parse(row["Id"].ToString()),
-                    Title = row["Title"].ToString(),
-                    Author = row["Author"].ToString(),
-                    Description = row["Description"].ToString(),
-                    Category = row["Category"].ToString(),
-                    CoverUrl = row["CoverUrl"].ToString(),
-                    Price = decimal.Parse(row["Price"].ToString()),
-                    NbPages = int.Parse(row["NbPages"].ToString()),
-                    ISBN = row["ISBN"].ToString(),
-                    Year = int.Parse(row["Year"].ToString()),
-                    Rating = int.Parse(row["Rating"].ToString())
-                });
-            }
-            return books;
-        }
+        
     }
 }

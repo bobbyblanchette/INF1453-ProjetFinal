@@ -214,6 +214,7 @@
     <Content Include="Views\Shared\DisplayTemplates\Rating.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\User\Library.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
