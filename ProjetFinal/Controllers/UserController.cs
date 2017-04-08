@@ -46,7 +46,7 @@ namespace ProjetFinal.Controllers
                     string query = "insert into Users (Username, [Password], FirstName, LastName, PhoneNumber, Admin) values (@username, @password, @firstName, @lastName, @phoneNumber, @admin)";
                     OleDbCommand cmd = new OleDbCommand(query, conn);
                     cmd.Parameters.Add(new OleDbParameter("@username", user.Username));
-                    cmd.Parameters.Add(new OleDbParameter("@password", SHA1Encode(user.Password)));
+                    cmd.Parameters.Add(new OleDbParameter("@password", SaltAndHash(user.Password)));
                     cmd.Parameters.Add(new OleDbParameter("@firstName", user.FirstName ?? ""));
                     cmd.Parameters.Add(new OleDbParameter("@lastName", user.LastName ?? ""));
                     cmd.Parameters.Add(new OleDbParameter("@phoneNumber", user.PhoneNumber ?? ""));
@@ -58,7 +58,13 @@ namespace ProjetFinal.Controllers
 
                     cmd.Dispose();
                     conn.Close();
-                    
+
+                    return Login(new Models.LoginModel()
+                    {
+                        Username = user.Username,
+                        Password = user.Password,
+                        RememberMe = true
+                    });
                 }
             }
             return View(user);
@@ -71,12 +77,19 @@ namespace ProjetFinal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private static string SHA1Encode(string value)
+        private static string SaltAndHash(string password)
         {
-            var hash = SHA1.Create();
-            var encoder = new System.Text.ASCIIEncoding();
-            var combined = encoder.GetBytes(value ?? "");
-            return BitConverter.ToString(hash.ComputeHash(combined)).ToLower().Replace("-", "");
+            string salt = CreateSalt(32);
+            string hash = Utils.generateHash(password, salt);
+            return salt + "|" + hash;
+        }
+
+        private static string CreateSalt(int size)
+        {
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] buff = new byte[size];
+            rng.GetBytes(buff);
+            return Convert.ToBase64String(buff);
         }
     }
 }

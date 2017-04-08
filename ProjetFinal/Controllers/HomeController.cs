@@ -18,13 +18,13 @@ namespace ProjetFinal.Controllers
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
             using (var conn = new OleDbConnection(connString))
             {
-                string query = "select * from Books";
+                string query = "select * from [Books]";
                 if (!string.IsNullOrWhiteSpace(searchString))
                 {
-                    query += " where Title like @searchString";
+                    query += " where [Title] like @searchString";
                 }
                 else if (!string.IsNullOrWhiteSpace(category))
-                    query += " where Category = @category";
+                    query += " where [Category] = @category";
 
 
                 OleDbCommand searchCmd = new OleDbCommand(query, conn);
@@ -34,7 +34,7 @@ namespace ProjetFinal.Controllers
                 if (!string.IsNullOrWhiteSpace(category))
                     searchCmd.Parameters.AddWithValue("@category", category);
 
-                OleDbCommand categoriesCmd = new OleDbCommand("select distinct Category from Books", conn);
+                OleDbCommand categoriesCmd = new OleDbCommand("select distinct [Category] from [Books]", conn);
 
                 conn.Open();
 
@@ -64,7 +64,7 @@ namespace ProjetFinal.Controllers
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
             using (var conn = new OleDbConnection(connString))
             {
-                string query = "select * from Books where Id = @id";
+                string query = "select * from [Books] where Id = @id";
 
                 OleDbCommand cmd = new OleDbCommand(query, conn);
                 cmd.Parameters.AddWithValue("@id", id);

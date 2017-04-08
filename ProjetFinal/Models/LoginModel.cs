@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Data;
 using System.Data.OleDb;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Web;
 
 namespace ProjetFinal.Models
@@ -28,31 +28,28 @@ namespace ProjetFinal.Models
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
             using (var conn = new OleDbConnection(connString))
             {
-                string query = "select Username from Users where Username = @username and Password = @password";
+                string query = "select [Username], [Password] from [Users] where [Username] = @username";
                 OleDbCommand cmd = new OleDbCommand(query, conn);
                 cmd.Parameters.Add(new OleDbParameter("@username", this.Username));
-                cmd.Parameters.Add(new OleDbParameter("@password", SHA1Encode(this.Password)));
 
                 conn.Open();
                 OleDbDataReader reader = cmd.ExecuteReader();
                 if (!reader.HasRows)
-                    results.Add(new ValidationResult("Le nom d'utilisateur ou le mot de passe est invalide ou n'existe pas.", new string[] { "Username", "Password" }));
+                    results.Add(new ValidationResult("Ce nom d'utilisateur n'existe pas.", new string[] { "Username" }));
+                else
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    string rawSaltAndHash = dt.Rows[0]["Password"].ToString();
+                    string[] saltAndHash = rawSaltAndHash.Split('|');
+                    if (Utils.generateHash(this.Password, saltAndHash[0]) != saltAndHash[1])
+                        results.Add(new ValidationResult("Ce mot de passe est incorrect.", new string[] { "Password" }));
+                }
                 reader.Close();
                 cmd.Dispose();
                 conn.Close();
                 return results;
             }
-        }
-
-        private static string SHA1Encode(string value)
-        {
-            return value;
-            /*
-            var hash = SHA1.Create();
-            var encoder = new System.Text.ASCIIEncoding();
-            var combined = encoder.GetBytes(value ?? "");
-            return BitConverter.ToString(hash.ComputeHash(combined)).ToLower().Replace("-", "");
-            */
         }
     }
 }

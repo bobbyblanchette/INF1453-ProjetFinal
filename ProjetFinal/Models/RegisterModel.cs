@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data.OleDb;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Web;
 
 namespace ProjetFinal.Models
 {
-    public class RegisterModel
+    public class RegisterModel : IValidatableObject
     {
         [Required]
         [Display(Name = "Nom d'utilisateur")]
@@ -33,5 +32,27 @@ namespace ProjetFinal.Models
         [Display(Name = "Confirmer le mot de passe ")]
         [Compare("Password", ErrorMessage = "La confirmation du mot de passe ne correspond pas au mot de passe écrit")]
         public string ConfirmPassword { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
+            using (var conn = new OleDbConnection(connString))
+            {
+                string query = "select [Username] from [Users] where [Username] = @username";
+                OleDbCommand cmd = new OleDbCommand(query, conn);
+                cmd.Parameters.Add(new OleDbParameter("@username", this.Username));
+                
+                conn.Open();
+                OleDbDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                    results.Add(new ValidationResult("Ce nom d'utilisateur existe déjà.", new string[] { "Username" }));
+                reader.Close();
+                cmd.Dispose();
+                conn.Close();
+                return results;
+            }
+        }
     }
 }
