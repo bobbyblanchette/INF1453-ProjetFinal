@@ -20,9 +20,7 @@ namespace ProjetFinal.Controllers
             {
                 string query = "select * from [Books]";
                 if (!string.IsNullOrWhiteSpace(searchString))
-                {
                     query += " where [Title] like @searchString";
-                }
                 else if (!string.IsNullOrWhiteSpace(category))
                     query += " where [Category] = @category";
 
@@ -31,8 +29,13 @@ namespace ProjetFinal.Controllers
 
                 if (!string.IsNullOrWhiteSpace(searchString))
                     searchCmd.Parameters.AddWithValue("@searchString", "%" + searchString + "%");
-                if (!string.IsNullOrWhiteSpace(category))
+                else if (!string.IsNullOrWhiteSpace(category))
+                {
                     searchCmd.Parameters.AddWithValue("@category", category);
+                    model.currentCategory = category;
+                }
+
+
 
                 OleDbCommand categoriesCmd = new OleDbCommand("select distinct [Category] from [Books]", conn);
 

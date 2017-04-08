@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Atlas - La boutique de livres électroniques de référence.";
+    string defaultCategory = "Tous";
 }
 
 <div class="row">
@@ -10,9 +11,10 @@
             @ViewBag.Title
         </p>
         <div class="list-group">
+            @Html.ActionLink(defaultCategory, "Index", "Home", routeValues: null, htmlAttributes: new { @class = Model.currentCategory == defaultCategory ? "list-group-item active" : "list-group-item" })
             @foreach (string category in Model.Categories)
             {
-                @Html.ActionLink(category, "Index", "Home", new { searchString = "", category = category }, new { @class = "list-group-item" })
+                @Html.ActionLink(category, "Index", "Home", new { searchString = "", category = category }, new { @class = Model.currentCategory == category ? "list-group-item active" : "list-group-item" })
             }
         </div>
     </div>
