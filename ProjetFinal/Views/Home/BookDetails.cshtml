@@ -4,6 +4,9 @@
     ViewBag.Title = Model.Title;
 }
 
+@Html.HiddenFor(m => m.Price, new { id="_price" })
+@Html.Hidden("ConfirmPurchase", Url.Action("ConfirmPurchase", "Home", new { id = Model.Id }), new { id = "confirmPurchaseLink" })
+
 <div class="row">
     <div class="col-sm-4">
         <img src="@Model.CoverUrl" />
@@ -20,8 +23,9 @@
         <p>Année: @Model.Year</p>
     </div>
     <div class="col-sm-2">
-        <button class="btn btn-primary">PayPal</button>
+        <div id="paypal-button-container"></div>
     </div>
 </div>
 <hr />
 <p>@Model.Description</p>
+
