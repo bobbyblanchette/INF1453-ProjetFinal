@@ -50,16 +50,11 @@
         </footer>
     </div>
 
-    @if (!Request.IsAuthenticated)
-    {
-        @Html.Partial("LoginModal", new ProjetFinal.Models.LoginViewModel())
-        @Html.Partial("RegisterModal", new ProjetFinal.Models.RegisterViewModel())
-    }
+    
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
-    @Html.RenderScripts()
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
@@ -10,70 +11,76 @@ namespace ProjetFinal.Controllers
 {
     public class HomeController : Controller
     {
-        public static string connString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=J:\Dev\Repos\INF1453\ProjetFinal\ProjetFinal\Atlas.mdb;Persist Security Info=False";
         public ActionResult Index(string searchString = null, string category = null)
         {
-            OleDbConnection conn = new OleDbConnection(connString);
-
-
-            string query = "select * from Books";
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query += " where Title like @searchString";
-            }
-            else if (!string.IsNullOrWhiteSpace(category))
-                query += " where Category = @category";
-                        
-            
-            OleDbCommand searchCmd = new OleDbCommand(query, conn);
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-                searchCmd.Parameters.AddWithValue("@searchString", "%" + searchString + "%");
-            if (!string.IsNullOrWhiteSpace(category))
-                searchCmd.Parameters.AddWithValue("@category", category);
-
-            OleDbCommand categoriesCmd = new OleDbCommand("select distinct Category from Books", conn);
-
-            conn.Open();
-
-            var searchResultsTable = new DataTable();
-            searchResultsTable.Load(searchCmd.ExecuteReader());
-
-            var categoriesTable = new DataTable();
-            categoriesTable.Load(categoriesCmd.ExecuteReader());
-
-            conn.Close();
-            
             ProjetFinal.Models.HomeModel model = new Models.HomeModel();
-            model.Books = Deserialize(searchResultsTable);
-            foreach (DataRow row in categoriesTable.Rows)
-            {
-                model.Categories.Add(row["Category"].ToString());
-            }
 
+            string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
+            using (var conn = new OleDbConnection(connString))
+            {
+                string query = "select * from Books";
+                if (!string.IsNullOrWhiteSpace(searchString))
+                {
+                    query += " where Title like @searchString";
+                }
+                else if (!string.IsNullOrWhiteSpace(category))
+                    query += " where Category = @category";
+
+
+                OleDbCommand searchCmd = new OleDbCommand(query, conn);
+
+                if (!string.IsNullOrWhiteSpace(searchString))
+                    searchCmd.Parameters.AddWithValue("@searchString", "%" + searchString + "%");
+                if (!string.IsNullOrWhiteSpace(category))
+                    searchCmd.Parameters.AddWithValue("@category", category);
+
+                OleDbCommand categoriesCmd = new OleDbCommand("select distinct Category from Books", conn);
+
+                conn.Open();
+
+                var searchResultsTable = new DataTable();
+                searchResultsTable.Load(searchCmd.ExecuteReader());
+
+                var categoriesTable = new DataTable();
+                categoriesTable.Load(categoriesCmd.ExecuteReader());
+
+                conn.Close();
+
+                
+                model.Books = Deserialize(searchResultsTable);
+                foreach (DataRow row in categoriesTable.Rows)
+                {
+                    model.Categories.Add(row["Category"].ToString());
+                }
+
+            }
             return View(model);
         }
 
         public ActionResult BookDetails(int id)
         {
-            OleDbConnection conn = new OleDbConnection(connString);
+            ProjetFinal.Models.BookModel model;
+
+            string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
+            using (var conn = new OleDbConnection(connString))
+            {
+                string query = "select * from Books where Id = @id";
+
+                OleDbCommand cmd = new OleDbCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open();
+
+                var dataTable = new DataTable();
+                dataTable.Load(cmd.ExecuteReader());
+
+                conn.Close();
 
 
-            string query = "select * from Books where Id = @id";
-            
-            OleDbCommand cmd = new OleDbCommand(query, conn);
-            cmd.Parameters.AddWithValue("@id", id);
+                model = Deserialize(dataTable).FirstOrDefault();
 
-            conn.Open();
-
-            var dataTable = new DataTable();
-            dataTable.Load(cmd.ExecuteReader());
-
-            conn.Close();
-
-            ProjetFinal.Models.BookModel model = Deserialize(dataTable).FirstOrDefault();
-            
-            return View(model);
+            }
+                return View(model);
         }
 
         public List<Models.BookModel> Deserialize(DataTable dt)
