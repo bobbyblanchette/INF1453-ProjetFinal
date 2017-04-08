@@ -7,23 +7,35 @@
 @Html.HiddenFor(m => m.Price, new { id="_price" })
 @Html.Hidden("ConfirmPurchase", Url.Action("ConfirmPurchase", "User", new { id = Model.Id }), new { id = "confirmPurchaseLink" })
 
-<div class="row">
-    <div class="col-sm-4">
-        <img src="@Model.CoverUrl" />
-    </div>
-    <div class="col-sm-6">
+<div class="row book-meta">
+    <div class="col-sm-8">
+        <img class="img-responsive" src="@Model.CoverUrl" align="left" />
         <h1>
             @Model.Title
         </h1>
         <h4>
             @Model.Author
         </h4>
-        @Html.DisplayFor(m => m.Price)
-        <p>Nb. Pages: @Model.NbPages</p>
-        <p>Année: @Model.Year</p>
+        <p><b>Catégorie :</b> @Model.Category</p>
+        <p><b>ISBN :</b> @Model.ISBN</p>
+        <p><b>Année :</b> @Model.Year</p>
+        <p><b>Pages :</b> @Model.NbPages</p>
+        @Html.DisplayFor(m => m.Rating)
     </div>
-    <div class="col-sm-2">
-        <div id="paypal-button-container"></div>
+    <div class="col-sm-4 panel panel-default">
+        <div class="panel-body">
+            <h4>
+                <b>@Html.DisplayFor(m => m.Price)</b>
+            </h4>
+            @if (Request.IsAuthenticated)
+            {
+                <div id="paypal-button-container"></div>
+            } else
+            {
+                <p>Vous n'êtes pas connecté.<br />
+                @Html.ActionLink("Se connecter", "Login", "User")</p>
+            }
+        </div>
     </div>
 </div>
 <hr />
