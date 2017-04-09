@@ -1,4 +1,5 @@
-﻿.logo {
+﻿/*_Layout*/
+.logo {
     height:25px;
     margin-right:20px;
 }
@@ -7,6 +8,7 @@
     display: inline;
 }
 
+/*Index / Library*/
 .thumbnail {
     margin-bottom: 20px;
 }
@@ -51,4 +53,11 @@
 .book-meta h4 {
     font-weight: 700;
     padding-bottom: 20px;
+}
+
+/*Register*/
+.required:after {
+    content: " *";
+    font-weight: bold;
+    color: red;
 }

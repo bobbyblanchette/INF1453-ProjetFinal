@@ -24,14 +24,32 @@
     </div>
     <div class="col-sm-4 panel panel-default">
         <div class="panel-body">
-            <h4>
-                <b>@Html.DisplayFor(m => m.Price)</b>
-            </h4>
+            
             @if (Request.IsAuthenticated)
             {
-                <div id="paypal-button-container"></div>
-            } else
+                if (!Model.IsOwned)
+                {
+                    <h4>
+                        <b>@Html.DisplayFor(m => m.Price)</b>
+                    </h4>
+                    <div id="paypal-button-container"></div>
+                }
+                else
+                {
+                    using (Html.BeginForm("DownloadBook", "User", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(m => m.DlLink)
+                        <button class="btn btn-default" type="submit">Télécharger</button>
+                    }
+                }
+
+
+            }
+            else
             {
+                <h4>
+                    <b>@Html.DisplayFor(m => m.Price)</b>
+                </h4>
                 <p>Vous n'êtes pas connecté.<br />
                 @Html.ActionLink("Se connecter", "Login", "User")</p>
             }

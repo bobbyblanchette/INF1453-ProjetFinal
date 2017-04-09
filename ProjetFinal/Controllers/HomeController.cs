@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -23,7 +24,7 @@ namespace ProjetFinal.Controllers
                     query += " where [Title] like @searchString";
                 else if (!string.IsNullOrWhiteSpace(category))
                     query += " where [Category] = @category";
-                query += "order by [Rating] desc, [Title] asc";
+                query += " order by [Rating] desc, [Title] asc";
 
                 OleDbCommand searchCmd = new OleDbCommand(query, conn);
 
@@ -42,12 +43,16 @@ namespace ProjetFinal.Controllers
                 conn.Open();
 
                 var searchResultsTable = new DataTable();
-                searchResultsTable.Load(searchCmd.ExecuteReader());
+                using (var reader = searchCmd.ExecuteReader())
+                    searchResultsTable.Load(reader);
 
                 var categoriesTable = new DataTable();
-                categoriesTable.Load(categoriesCmd.ExecuteReader());
+                using (var reader = categoriesCmd.ExecuteReader())
+                    categoriesTable.Load(reader);
 
                 conn.Close();
+                searchCmd.Dispose();
+                categoriesCmd.Dispose();
 
                 
                 model.Books = Utils.deserialize(searchResultsTable);
@@ -67,20 +72,35 @@ namespace ProjetFinal.Controllers
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
             using (var conn = new OleDbConnection(connString))
             {
-                string query = "select * from [Books] where Id = @id";
+                string query = "select * from [Books] where [Id] = @id";
 
-                OleDbCommand cmd = new OleDbCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                OleDbCommand bookCmd = new OleDbCommand(query, conn);
+                bookCmd.Parameters.AddWithValue("@id", id);
+
+                bool isOwnedByUser = false;
+                
 
                 conn.Open();
 
                 var dataTable = new DataTable();
-                dataTable.Load(cmd.ExecuteReader());
+                using (var reader = bookCmd.ExecuteReader())
+                    dataTable.Load(reader);
+
+                if (Request.IsAuthenticated)
+                {
+                    OleDbCommand isOwnedCmd = new OleDbCommand("select * from [Sales] where [BookId] = @bookId and [UserId] = (select [Id] from [Users] where [Username] = @username)", conn);
+                    isOwnedCmd.Parameters.AddWithValue("@username", User.Identity.GetUserName());
+                    isOwnedCmd.Parameters.AddWithValue("@bookId", id);
+                    using (var reader = isOwnedCmd.ExecuteReader())
+                        isOwnedByUser = reader.HasRows;
+                    isOwnedCmd.Dispose();
+                }
 
                 conn.Close();
-
+                bookCmd.Dispose();
 
                 model = Utils.deserialize(dataTable).FirstOrDefault();
+                model.IsOwned = isOwnedByUser;
 
             }
                 return View(model);

@@ -26,7 +26,8 @@ namespace ProjetFinal
                     NbPages = int.Parse(row["NbPages"].ToString()),
                     ISBN = row["ISBN"].ToString(),
                     Year = int.Parse(row["Year"].ToString()),
-                    Rating = int.Parse(row["Rating"].ToString())
+                    Rating = int.Parse(row["Rating"].ToString()),
+                    DlLink = row["DlLink"].ToString()
                 });
             }
             return books;

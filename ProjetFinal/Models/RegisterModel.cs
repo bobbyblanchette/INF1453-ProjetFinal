@@ -42,15 +42,14 @@ namespace ProjetFinal.Models
             {
                 string query = "select [Username] from [Users] where [Username] = @username";
                 OleDbCommand cmd = new OleDbCommand(query, conn);
-                cmd.Parameters.Add(new OleDbParameter("@username", this.Username));
+                cmd.Parameters.AddWithValue("@username", this.Username);
                 
                 conn.Open();
-                OleDbDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows)
-                    results.Add(new ValidationResult("Ce nom d'utilisateur existe déjà.", new string[] { "Username" }));
-                reader.Close();
-                cmd.Dispose();
+                using (var reader = cmd.ExecuteReader())
+                    if (reader.HasRows)
+                        results.Add(new ValidationResult("Ce nom d'utilisateur existe déjà.", new string[] { "Username" }));
                 conn.Close();
+                cmd.Dispose();
                 return results;
             }
         }

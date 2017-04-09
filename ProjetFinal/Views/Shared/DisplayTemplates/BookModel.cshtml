@@ -6,7 +6,10 @@
             <img src="@Model.CoverUrl" />
         </a>
         <div class="caption">
-            <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
+            @if (ViewBag.ShowPrice)
+            {
+                <h4 class="pull-right">@Html.DisplayFor(m => m.Price)</h4>
+            }
             <h4>
                 @Html.ActionLink(Model.Title, "BookDetails", "Home", new { id = Model.Id }, new { @class = "item-title" })
             </h4>

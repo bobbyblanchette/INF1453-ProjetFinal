@@ -28,5 +28,7 @@ namespace ProjetFinal.Models
         public int Year { get; set; }
         [UIHint("Rating")]
         public int Rating { get; set; }
+        public string DlLink { get; set; }
+        public bool IsOwned { get; set; }
     }
 }

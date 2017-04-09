@@ -30,24 +30,23 @@ namespace ProjetFinal.Models
             {
                 string query = "select [Username], [Password] from [Users] where [Username] = @username";
                 OleDbCommand cmd = new OleDbCommand(query, conn);
-                cmd.Parameters.Add(new OleDbParameter("@username", this.Username));
+                cmd.Parameters.AddWithValue("@username", this.Username);
 
                 conn.Open();
-                OleDbDataReader reader = cmd.ExecuteReader();
-                if (!reader.HasRows)
-                    results.Add(new ValidationResult("Ce nom d'utilisateur n'existe pas.", new string[] { "Username" }));
-                else
-                {
-                    DataTable dt = new DataTable();
-                    dt.Load(reader);
-                    string rawSaltAndHash = dt.Rows[0]["Password"].ToString();
-                    string[] saltAndHash = rawSaltAndHash.Split('|');
-                    if (Utils.generateHash(this.Password, saltAndHash[0]) != saltAndHash[1])
-                        results.Add(new ValidationResult("Ce mot de passe est incorrect.", new string[] { "Password" }));
-                }
-                reader.Close();
-                cmd.Dispose();
+                using (var reader = cmd.ExecuteReader())
+                    if (!reader.HasRows)
+                        results.Add(new ValidationResult("Ce nom d'utilisateur n'existe pas.", new string[] { "Username" }));
+                    else
+                    {
+                        DataTable dt = new DataTable();
+                        dt.Load(reader);
+                        string rawSaltAndHash = dt.Rows[0]["Password"].ToString();
+                        string[] saltAndHash = rawSaltAndHash.Split('|');
+                        if (Utils.generateHash(this.Password, saltAndHash[0]) != saltAndHash[1])
+                            results.Add(new ValidationResult("Ce mot de passe est incorrect.", new string[] { "Password" }));
+                    }
                 conn.Close();
+                cmd.Dispose();
                 return results;
             }
         }

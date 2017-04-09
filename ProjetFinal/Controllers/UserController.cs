@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -14,6 +15,18 @@ namespace ProjetFinal.Controllers
 {
     public class UserController : Controller
     {
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
         public ActionResult Library(string searchString = null, string category = null)
         {
             ProjetFinal.Models.HomeModel model = new Models.HomeModel();
@@ -46,13 +59,16 @@ namespace ProjetFinal.Controllers
                 conn.Open();
 
                 var searchResultsTable = new DataTable();
-                searchResultsTable.Load(searchCmd.ExecuteReader());
+                using (var reader = searchCmd.ExecuteReader())
+                    searchResultsTable.Load(reader);
 
                 var categoriesTable = new DataTable();
-                categoriesTable.Load(categoriesCmd.ExecuteReader());
+                using (var reader = categoriesCmd.ExecuteReader())
+                    categoriesTable.Load(reader);
 
                 conn.Close();
-
+                searchCmd.Dispose();
+                categoriesCmd.Dispose();
 
                 model.Books = Utils.deserialize(searchResultsTable);
                 foreach (DataRow row in categoriesTable.Rows)
@@ -63,16 +79,13 @@ namespace ProjetFinal.Controllers
             }
             return View(model);
         }
-        [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
-        }
 
-        [HttpGet]
-        public ActionResult Register()
+        [HttpPost]
+        public ActionResult DownloadBook(Models.BookModel book)
         {
-            return View();
+            string file = "~/App_Data/" + book.DlLink;
+            string contentType = "application/pdf";
+            return File(file, contentType, Path.GetFileName(file));
         }
 
         [HttpPost]
@@ -96,19 +109,19 @@ namespace ProjetFinal.Controllers
                 {
                     string query = "insert into Users (Username, [Password], FirstName, LastName, PhoneNumber, Admin) values (@username, @password, @firstName, @lastName, @phoneNumber, @admin)";
                     OleDbCommand cmd = new OleDbCommand(query, conn);
-                    cmd.Parameters.Add(new OleDbParameter("@username", user.Username));
-                    cmd.Parameters.Add(new OleDbParameter("@password", SaltAndHash(user.Password)));
-                    cmd.Parameters.Add(new OleDbParameter("@firstName", user.FirstName ?? ""));
-                    cmd.Parameters.Add(new OleDbParameter("@lastName", user.LastName ?? ""));
-                    cmd.Parameters.Add(new OleDbParameter("@phoneNumber", user.PhoneNumber ?? ""));
-                    cmd.Parameters.Add(new OleDbParameter("@admin", false));
+                    cmd.Parameters.AddWithValue("@username", user.Username);
+                    cmd.Parameters.AddWithValue("@password", SaltAndHash(user.Password));
+                    cmd.Parameters.AddWithValue("@firstName", user.FirstName ?? "");
+                    cmd.Parameters.AddWithValue("@lastName", user.LastName ?? "");
+                    cmd.Parameters.AddWithValue("@phoneNumber", user.PhoneNumber ?? "");
+                    cmd.Parameters.AddWithValue("@admin", false);
 
                     conn.Open();
 
                     cmd.ExecuteNonQuery();
 
-                    cmd.Dispose();
                     conn.Close();
+                    cmd.Dispose();
 
                     return Login(new Models.LoginModel()
                     {
@@ -135,15 +148,15 @@ namespace ProjetFinal.Controllers
             {
                 string query = "insert into [Sales] ([UserId], [BookId]) select [Id], @bookId from [Users] where [Username] = @username";
                 OleDbCommand cmd = new OleDbCommand(query, conn);
-                cmd.Parameters.Add(new OleDbParameter("@bookId", id));
-                cmd.Parameters.Add(new OleDbParameter("@username", User.Identity.GetUserName()));
+                cmd.Parameters.AddWithValue("@bookId", id);
+                cmd.Parameters.AddWithValue("@username", User.Identity.GetUserName());
 
                 conn.Open();
 
                 cmd.ExecuteNonQuery();
 
-                cmd.Dispose();
                 conn.Close();
+                cmd.Dispose();
             }
             return RedirectToAction("Index", "Home");
         }
