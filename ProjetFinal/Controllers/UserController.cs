@@ -34,7 +34,7 @@ namespace ProjetFinal.Controllers
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
             using (var conn = new OleDbConnection(connString))
             {
-                string query = "select * from [Books] where [Id] = (select [BookId] from [Sales] where [UserId] = (select [Id] from [Users] where [Username] = @username))";
+                string query = "select * from [Books] where [Id] in (select [BookId] from [Sales] where [UserId] = (select [Id] from [Users] where [Username] = @username))";
                 if (!string.IsNullOrWhiteSpace(searchString))
                     query += " and [Title] like @searchString";
                 else if (!string.IsNullOrWhiteSpace(category))
