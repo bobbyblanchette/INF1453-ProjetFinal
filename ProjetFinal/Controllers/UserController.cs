@@ -15,18 +15,32 @@ namespace ProjetFinal.Controllers
 {
     public class UserController : Controller
     {
+        /// <summary>
+        /// Retourne la vue Login.cshtml avec un modèle LoginModel vide
+        /// </summary>
+        /// <returns>La vue Login.cshtml avec un modèle LoginModel vide</returns>
         [HttpGet]
         public ActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Retourne la vue Register.cshtml avec un modèle RegisterModel vide
+        /// </summary>
+        /// <returns>La vue Register.cshtml avec un modèle RegisterModel vide</returns>
         [HttpGet]
         public ActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Retourne la vue "Library.cshtml", avec un modèle HomeModel.cs contenant les livres qui sont dans la librairie de l'utilisateur, filtrés selon les paramètres entrés
+        /// </summary>
+        /// <param name="searchString">Mots clés de recherche</param>
+        /// <param name="category">Catégorie sélectionnée</param>
+        /// <returns>La vue "Library.cshtml", avec un modèle HomeModel</returns>
         public ActionResult Library(string searchString = null, string category = null)
         {
             ProjetFinal.Models.HomeModel model = new Models.HomeModel();
@@ -80,6 +94,11 @@ namespace ProjetFinal.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Retourne le fichier PDF selon le lien contenu dans le modèle BookModel entré en paramètre
+        /// </summary>
+        /// <param name="book">Le modèle BookModel dont on veut le fichier PDF</param>
+        /// <returns>Fichier de type PDF</returns>
         [HttpPost]
         public ActionResult DownloadBook(Models.BookModel book)
         {
@@ -88,6 +107,11 @@ namespace ProjetFinal.Controllers
             return File(file, contentType, Path.GetFileName(file));
         }
 
+        /// <summary>
+        /// Vérifie la validité du modèle LoginModel entré en argument, et, si ce modèle est valide, utilises FormsAuthentication pour connecter l'utilisateur
+        /// </summary>
+        /// <param name="user">Modèle LoginModel du form de connexion</param>
+        /// <returns>Rediriges vers Index() dans le HomeController</returns>
         [HttpPost]
         public ActionResult Login(Models.LoginModel user)
         {
@@ -99,6 +123,11 @@ namespace ProjetFinal.Controllers
             return View(user);
         }
 
+        /// <summary>
+        /// Vérifie la validité du modèle RegisterModel entré en argument, et, si ce modèle est valide, crée la requête pour inscrire l'utilisateur
+        /// </summary>
+        /// <param name="user">Modèle LoginModel du form d'inscription</param>
+        /// <returns>Rediriges vers Index() dans le HomeController</returns>
         [HttpPost]
         public ActionResult Register(Models.RegisterModel user)
         {
@@ -134,13 +163,21 @@ namespace ProjetFinal.Controllers
             return View(user);
         }
 
-
+        /// <summary>
+        /// Déconnecte l'utilisateur avec FormsAuthentication
+        /// </summary>
+        /// <returns>Rediriges vers Index() dans le HomeController</returns>
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Crée la requête pour ajouter une entrée dans la table Sales de la base de données, reliant le ID de l'utilisateur au ID d'un livre
+        /// </summary>
+        /// <param name="id">Le ID du livre acheté</param>
+        /// <returns>Rediriges vers Index() dans le HomeController</returns>
         public ActionResult ConfirmPurchase(int id)
         {
             string connString = ConfigurationManager.ConnectionStrings["AtlasDB"].ConnectionString;
@@ -161,6 +198,11 @@ namespace ProjetFinal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Crée un salt, pour ensuite générer un hash avec la méthode generateHash et retourner un string contenant le salt et le hash, séparés par un "|"
+        /// </summary>
+        /// <param name="password">Le mot de passe à hasher</param>
+        /// <returns>Un string contenant le salt et le hash, séparés par un "|"</returns>
         private static string SaltAndHash(string password)
         {
             string salt = CreateSalt(32);
@@ -168,6 +210,11 @@ namespace ProjetFinal.Controllers
             return salt + "|" + hash;
         }
 
+        /// <summary>
+        /// Crée un salt aléatoire à l'aide de la méthode RNGCryptoServiceProvider (pour avoir un nombre aléatoire riche)
+        /// </summary>
+        /// <param name="size">La taille du salt à créer</param>
+        /// <returns>Le salt, en int</returns>
         private static string CreateSalt(int size)
         {
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();

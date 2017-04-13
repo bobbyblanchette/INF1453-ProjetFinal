@@ -12,6 +12,12 @@ namespace ProjetFinal.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Retourne la vue "Index.cshtml", avec un modèle HomeModel contenant les livres, filtrés selon les paramètres entrés
+        /// </summary>
+        /// <param name="searchString">Mots clés de recherche</param>
+        /// <param name="category">Catégorie sélectionnée</param>
+        /// <returns>La vue "Index.cshtml", avec un modèle HomeModel</returns>
         public ActionResult Index(string searchString = null, string category = null)
         {
             ProjetFinal.Models.HomeModel model = new Models.HomeModel();
@@ -65,6 +71,11 @@ namespace ProjetFinal.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Retourne la vue "BookDetails.cshtml", avec un modèle BookModel contenant les détails du livre demandé dans les paramètres
+        /// </summary>
+        /// <param name="id">ID du livre demandé</param>
+        /// <returns>La vue "BookDetails.cshtml", avec un modèle BookModel</returns>
         public ActionResult BookDetails(int id)
         {
             ProjetFinal.Models.BookModel model;

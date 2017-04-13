@@ -9,6 +9,11 @@ namespace ProjetFinal
 {
     public class Utils
     {
+        /// <summary>
+        /// Crée un modèle BookModel et le popule selon une dataTable recu en paramètre
+        /// </summary>
+        /// <param name="dt">La dataTable qu'on veut désérialiser</param>
+        /// <returns>Le modèle BookModel désérialisé</returns>
         public static List<Models.BookModel> deserialize(DataTable dt)
         {
             List<Models.BookModel> books = new List<Models.BookModel>();
@@ -33,6 +38,12 @@ namespace ProjetFinal
             return books;
         }
 
+        /// <summary>
+        /// Génère un hash à partir un password et un salt entrés en paramètre, avec 5000 itérations de SHA256, en réintroduisant le salt dans chaque itérations
+        /// </summary>
+        /// <param name="password">Le password à hasher</param>
+        /// <param name="salt">Le salt</param>
+        /// <returns>Le hash généré</returns>
         public static string generateHash(string password, string salt)
         {
             string hash = SHA256Hash(password + salt);
@@ -41,6 +52,11 @@ namespace ProjetFinal
             return hash;
         }
 
+        /// <summary>
+        /// Génére un hash SHA256 à partir d'une valeur entrée en paramètre
+        /// </summary>
+        /// <param name="value">La valeur à hasher</param>
+        /// <returns>Le hash généré</returns>
         public static string SHA256Hash(string value)
         {
             SHA256 hash = SHA256.Create();
